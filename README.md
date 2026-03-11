@@ -35,7 +35,8 @@ High-level skills that coordinate lower-level skills into complete workflows.
 |-------|-------------|
 | `/analyze-codebase` | Understand a repo quickly — architecture, modules, integrations, complexity |
 | `/design-feature` | Transform a feature request into a system design proposal |
-| `/implement-ticket` | End-to-end: scan → plan → implement → review → fix |
+| `/implement-ticket` | End-to-end: scan → plan → implement → test → review → fix → PR |
+| `/address-feedback` | Read PR/QA feedback, categorize issues, apply fixes, and push |
 
 ### Focused skills
 
@@ -46,7 +47,9 @@ Single-responsibility skills that do one thing well.
 | `/architecture-scan` | Analyze codebase structure, modules, dependencies, and hot spots |
 | `/create-skill` | Scaffold a new skill aligned with toolkit conventions |
 | `/enhance-prompt` | Transform a rough prompt (any language) into a clear English prompt |
-| `/fix-branch` | Apply targeted fixes based on review findings or remediation plan |
+| `/create-pr` | Create a pull request with structured description and test plan |
+| `/fix-branch` | Apply targeted fixes from any source (review, PR feedback, QA, direct) |
+| `/generate-tests` | Generate tests for changed or untested code on the current branch |
 | `/implementation-plan` | Generate a concrete plan with affected files, order, risks, validation |
 | `/integration-check` | Validate cross-repo consistency (APIs, events, schemas, naming) |
 | `/remediation-plan` | Convert review findings into a prioritized fix plan |
@@ -89,10 +92,12 @@ For implementing a feature in one repository:
 /architecture-scan              # Understand the codebase
 /implementation-plan <task>     # Plan the work
 [implement]                     # Write the code
+/generate-tests                 # Write tests for changed code
 /review-branch                  # Review your changes
 /remediation-plan               # Plan fixes (if needed)
 /fix-branch                     # Apply fixes
-[create PR]
+/create-pr                      # Push and create PR
+/address-feedback <PR#>         # Handle reviewer feedback
 ```
 
 See [docs/single-repo-usage.md](docs/single-repo-usage.md) for the full guide.
@@ -105,11 +110,12 @@ For implementing a feature across multiple services:
 /architecture-scan              # Scan each repo
 /implementation-plan <task>     # Plan per repo
 [implement per repo]            # Providers before consumers
+/generate-tests                 # Write tests per repo
 /review-branch                  # Review each repo
 /integration-check              # Validate cross-repo consistency
 /remediation-plan               # Plan fixes (if needed)
 /fix-branch                     # Fix per repo
-[create PRs, link them]
+/create-pr                      # Create PRs per repo, link them
 ```
 
 See [docs/multi-repo-usage.md](docs/multi-repo-usage.md) for the full guide.

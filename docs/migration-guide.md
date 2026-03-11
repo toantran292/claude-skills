@@ -25,7 +25,7 @@ How this repository evolved from the previous version.
 | `enhance-prompt` | `enhance-prompt` | Slimmed down, references `rules/prompts.md` |
 | `execute-prompt` (204 lines) | Removed | Standards moved to `rules/review.md`, execution is what Claude Code does natively |
 | `review-branch` (215 lines) | `review-branch` | Slimmed to ~60 lines, references shared rules and output styles |
-| `fix-branch` (174 lines) | `fix-branch` | Slimmed to ~70 lines, references shared rules |
+| `fix-branch` (174 lines) | `fix-branch` | Slimmed to ~70 lines, accepts any fix source (review, PR, QA, direct) |
 | `create-skill` (139 lines) | `create-skill` | Slimmed, removed PR automation |
 | `workflow-prompt-craft` | Removed | Users run `/enhance-prompt` then work directly |
 | `workflow-review-fix` | Removed | Replaced by documented workflow in `rules/single-repo-workflow.md` |
@@ -33,9 +33,12 @@ How this repository evolved from the previous version.
 | — | `implementation-plan` | New — concrete planning before implementation |
 | — | `remediation-plan` | New — structured fix planning from reviews |
 | — | `integration-check` | New — multi-repo consistency validation |
+| — | `generate-tests` | New — write tests for changed or untested code |
+| — | `create-pr` | New — create PR with structured description and test plan |
 | — | `analyze-codebase` | New — orchestration: full codebase analysis with entry points and complexity |
 | — | `design-feature` | New — orchestration: feature request → system design proposal |
-| — | `implement-ticket` | New — orchestration: end-to-end scan → plan → implement → review → fix |
+| — | `implement-ticket` | New — orchestration: end-to-end scan → plan → implement → test → review → fix → PR |
+| — | `address-feedback` | New — orchestration: read PR/QA feedback, categorize, fix, push |
 
 ### Removed files
 
@@ -69,8 +72,9 @@ If you were using the previous version:
 3. The following skills work the same: `/enhance-prompt`, `/review-branch`, `/fix-branch`, `/create-skill`
 4. Replace `/workflow-review-fix <branch>` with the manual workflow: `/review-branch` → `/remediation-plan` → `/fix-branch`
 5. Replace `/execute-prompt` with direct prompting (Claude Code does this natively)
-6. Use the new focused skills: `/architecture-scan`, `/implementation-plan`, `/remediation-plan`, `/integration-check`
+6. Use the new focused skills: `/architecture-scan`, `/implementation-plan`, `/remediation-plan`, `/integration-check`, `/generate-tests`, `/create-pr`
 7. Use the new orchestration skills for complete workflows:
    - `/analyze-codebase` — understand a repo quickly
    - `/design-feature <description>` — produce a system design before coding
-   - `/implement-ticket <description>` — end-to-end implementation with review and fix
+   - `/implement-ticket <description>` — end-to-end implementation with tests, review, fix, and PR
+   - `/address-feedback <PR number>` — read PR/QA feedback, fix, and push

@@ -1,5 +1,20 @@
 # Changelog
 
+## v2.2.0 — 2026-03-11
+
+Complete developer workflow coverage — from ticket to QA acceptance.
+
+### Added
+- 3 new skills: `generate-tests`, `create-pr`, `address-feedback`
+- Full 11-step developer workflow in `rules/single-repo-workflow.md`
+- Updated docs: architecture, single-repo-usage, migration-guide with new skills
+
+### Changed
+- `fix-branch` — now accepts any fix source (review, PR feedback, QA bugs, direct description)
+- `implement-ticket` — added test generation (step 5), PR creation (step 9), 10 steps total
+- Updated README with new skills in both focused and workflow sections
+- Updated `validate.sh` to check for new skills
+
 ## v2.1.0 — 2026-03-11
 
 Add orchestration skills that coordinate focused skills into complete workflows.

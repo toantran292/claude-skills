@@ -56,7 +56,8 @@ High-level skills that coordinate focused skills into complete workflows. These 
 |-------|-------------|
 | `analyze-codebase` | `architecture-scan`, `integration-check` (multi-repo) |
 | `design-feature` | `architecture-scan`, `integration-check` (multi-repo) |
-| `implement-ticket` | `architecture-scan` → `implementation-plan` → [implement] → `review-branch` → `remediation-plan` → `fix-branch` → `integration-check` (multi-repo) |
+| `implement-ticket` | `architecture-scan` → `implementation-plan` → [implement] → `generate-tests` → `review-branch` → `remediation-plan` → `fix-branch` → `integration-check` (multi-repo) → `create-pr` |
+| `address-feedback` | reads PR/QA feedback → categorizes → applies fixes via `fix-branch` approach → pushes |
 
 ### Focused skills
 
@@ -68,7 +69,9 @@ Single-responsibility skills that do one thing well. Orchestration skills delega
 | `implementation-plan` | Produce concrete plan with files, order, risks |
 | `review-branch` | Severity-ranked code review |
 | `remediation-plan` | Convert review into prioritized fix plan |
-| `fix-branch` | Apply targeted fixes |
+| `fix-branch` | Apply targeted fixes from any source |
+| `generate-tests` | Write tests for changed or untested code |
+| `create-pr` | Create PR with structured description and test plan |
 | `integration-check` | Cross-repo consistency validation |
 | `enhance-prompt` | Prompt transformation |
 | `create-skill` | Scaffold new skills |
@@ -81,7 +84,7 @@ Previous skills (review-branch, fix-branch, execute-prompt) each contained 50-10
 
 ### Orchestration over monoliths
 
-The previous version had `workflow-*` skills with `disable-model-invocation: true` that were opaque chains. The new orchestration skills (`analyze-codebase`, `design-feature`, `implement-ticket`) improve on this by:
+The previous version had `workflow-*` skills with `disable-model-invocation: true` that were opaque chains. The new orchestration skills (`analyze-codebase`, `design-feature`, `implement-ticket`, `address-feedback`) improve on this by:
 - Clearly delegating to focused skills (no logic duplication)
 - Including user confirmation gates between phases
 - Supporting both single-repo and multi-repo modes
@@ -104,9 +107,11 @@ Orchestration layer:
   analyze-codebase ──→ architecture-scan, integration-check
   design-feature ────→ architecture-scan, integration-check
   implement-ticket ──→ architecture-scan → implementation-plan
-                       → [implement] → review-branch
-                       → remediation-plan → fix-branch
+                       → [implement] → generate-tests
+                       → review-branch → remediation-plan → fix-branch
                        → integration-check (multi-repo)
+                       → create-pr
+  address-feedback ──→ reads PR/QA feedback → fix-branch approach → push
 
 Focused layer:
   enhance-prompt          (standalone — no dependencies)
@@ -114,7 +119,9 @@ Focused layer:
   implementation-plan     (benefits from architecture-scan output)
   review-branch           (standalone — references rules/review.md)
   remediation-plan        (takes review-branch output as input)
-  fix-branch              (takes remediation-plan or review output as input)
+  fix-branch              (takes any fix source as input)
+  generate-tests          (standalone — tests changed files on branch)
+  create-pr               (standalone — creates PR from branch)
   integration-check       (standalone — multi-repo focused)
   create-skill            (standalone — meta skill)
 ```

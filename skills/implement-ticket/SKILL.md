@@ -1,13 +1,13 @@
 ---
 name: implement-ticket
-description: Turn a task or ticket into implemented, reviewed, and validated code changes.
+description: Turn a task or ticket into implemented, tested, reviewed, and PR-ready code changes.
 argument-hint: "ticket description (e.g. 'Implement lead ingestion endpoint')"
 disable-model-invocation: true
 ---
 
 # Implement Ticket
 
-End-to-end implementation of a ticket — from understanding through code, review, and fix.
+End-to-end implementation of a ticket — from understanding through code, tests, review, fix, and PR.
 
 ## Input
 
@@ -48,16 +48,23 @@ Present the plan to the user. Ask: **"Proceed with implementation?"**
 Write the code following the plan:
 - Apply standards from `.claude/rules/review.md`
 - Follow existing codebase patterns
-- Write tests for non-trivial logic
 - Make small, focused changes — do not modify unrelated code
 
-### Step 5: Review
+### Step 5: Generate tests
+
+Run `/generate-tests` to:
+- Identify changed files missing test coverage
+- Write tests following existing project conventions
+- Cover happy path, edge cases, and error cases
+- Verify all tests pass
+
+### Step 6: Review
 
 Run `/review-branch` to review the changes. This produces a severity-ranked report.
 
-If Critical or Major issues are found, proceed to Step 6. Otherwise, skip to Step 7.
+If Critical or Major issues are found, proceed to Step 7. Otherwise, skip to Step 8.
 
-### Step 6: Fix issues
+### Step 7: Fix issues
 
 If the review found issues:
 
@@ -65,14 +72,22 @@ If the review found issues:
 2. Run `/fix-branch` to apply the fixes
 3. Self-verify: read the final diff and confirm all Critical/Major issues are resolved
 
-### Step 7: Multi-repo validation (if applicable)
+### Step 8: Multi-repo validation (if applicable)
 
 If the ticket spans multiple repositories:
 - Run `/integration-check` to validate cross-service contracts
 - Flag any API or event schema mismatches
 - Fix mismatches before finalizing
 
-### Step 8: Summary
+### Step 9: Create PR
+
+Run `/create-pr` to:
+- Push the branch
+- Create a pull request with structured description, test plan, and risks
+
+Present the PR URL to the user.
+
+### Step 10: Summary
 
 Present the final result:
 
@@ -94,11 +109,9 @@ Present the final result:
 - **Issues fixed**: [count]
 - **Remaining**: [count, if any]
 
-## Potential Risks
-- [anything the reviewer should watch for]
-
-## Pull Request Description
-[Ready-to-use PR description summarizing the changes, motivation, and test plan]
+## Pull Request
+- **URL**: [pr-url]
+- **Status**: Ready for review
 ```
 
 ## Limitations
@@ -106,3 +119,4 @@ Present the final result:
 - Will not push code or create PRs without user confirmation
 - Review step may find issues that require design changes — the skill will stop and consult the user
 - Multi-repo implementation requires running this skill per repo with coordination
+- After PR is created, use `/address-feedback` to handle reviewer comments

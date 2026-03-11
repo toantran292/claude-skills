@@ -10,7 +10,7 @@ For a complete ticket implementation, use the orchestration skill:
 /implement-ticket add user notification preferences with email and Slack channels
 ```
 
-This runs the full cycle: scan → plan → implement → review → fix → summary.
+This runs the full cycle: scan → plan → implement → test → review → fix → PR → summary.
 
 ## Understand an unfamiliar codebase
 
@@ -59,7 +59,15 @@ Get a concrete plan with affected files, implementation order, risks, and valida
 
 Write the code following the plan. Claude Code applies the standards from `.claude/rules/review.md` automatically.
 
-### 5. Review
+### 5. Generate tests
+
+```
+/generate-tests
+```
+
+Write tests for changed files. Follows existing test patterns — covers happy path, edge cases, and error cases.
+
+### 6. Review
 
 ```
 /review-branch
@@ -67,7 +75,7 @@ Write the code following the plan. Claude Code applies the standards from `.clau
 
 Get a structured review with severity-ranked issues. Review defaults to the current branch.
 
-### 6. Remediate (if issues found)
+### 7. Remediate (if issues found)
 
 ```
 /remediation-plan from last review
@@ -75,7 +83,7 @@ Get a structured review with severity-ranked issues. Review defaults to the curr
 
 Convert review findings into a prioritized fix plan.
 
-### 7. Fix
+### 8. Fix
 
 ```
 /fix-branch
@@ -83,15 +91,35 @@ Convert review findings into a prioritized fix plan.
 
 Apply targeted fixes based on the remediation plan.
 
-### 8. Validate
+### 9. Create PR
 
-- Run tests
-- Check for regressions
-- Verify acceptance criteria
+```
+/create-pr
+```
 
-### 9. PR
+Push the branch and create a pull request with structured description, test plan, and risks.
 
-Create the pull request.
+### 10. Address feedback
+
+```
+/address-feedback 42
+```
+
+Read PR review comments, categorize them, apply fixes, and push updates. Also works with pasted feedback or QA bugs.
+
+### 11. QA fixes
+
+If QA finds bugs:
+
+```
+/address-feedback from QA
+```
+
+Or for direct fixes:
+
+```
+/fix-branch fix login timeout on slow connections
+```
 
 ## Quick workflow
 
@@ -101,7 +129,7 @@ For small changes (bug fixes, config changes, typos):
 [make changes]
 /review-branch
 [fix any issues]
-[create PR]
+/create-pr
 ```
 
 ## Prompt enhancement workflow

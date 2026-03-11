@@ -1,28 +1,32 @@
 ---
 name: fix-branch
-description: Apply targeted fixes based on a review report or remediation plan.
-argument-hint: "branch-name (optional, defaults to current branch)"
+description: Apply targeted fixes from any source — review reports, PR feedback, QA bugs, or direct instructions.
+argument-hint: "what to fix (description, PR number, or 'from last review')"
 ---
 
 # Fix Branch
 
-Apply fixes from a review or remediation plan to the current branch.
+Apply targeted fixes to the current branch.
 
 ## Input
 
-Branch to fix: **$ARGUMENTS**
+Fix context: **$ARGUMENTS**
 
-If no branch name provided, use the current branch.
+Accepts any of:
+- **"from last review"** — use the most recent `/review-branch` or `/remediation-plan` output
+- **PR feedback** — user pastes reviewer comments or provides a PR number
+- **QA bugs** — user describes bugs found during QA
+- **Direct description** — user describes specific issues to fix
+- **No input** — ask the user what to fix; suggest `/review-branch` if unsure
 
 ## Process
 
-### Step 1: Load context
+### Step 1: Parse and categorize
 
-Look for fix context in this order:
-1. Ask the user what to fix (they may paste issues or reference a review)
-2. Check if a remediation plan or review was recently produced in the conversation
-
-If no context is found, suggest running `/review-branch` first.
+Extract fix items from the input. Categorize by severity:
+- **Critical** — must fix (blockers, security, data loss)
+- **Major** — should fix (bugs, broken functionality)
+- **Minor** — nice to fix (style, naming, minor improvements)
 
 ### Step 2: Present and select
 
@@ -51,10 +55,10 @@ After each fix, show:
 
 After all fixes are applied, present:
 
-| # | Title | Severity | Status |
-|---|-------|----------|--------|
-| 1 | ...   | Critical | DONE   |
-| 2 | ...   | Major    | SKIPPED |
+| # | Title | Source | Severity | Status |
+|---|-------|--------|----------|--------|
+| 1 | ...   | review/PR/QA | Critical | DONE |
+| 2 | ...   | review/PR/QA | Major | SKIPPED |
 
 Include:
 - Fixes applied vs skipped
