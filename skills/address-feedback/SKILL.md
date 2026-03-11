@@ -67,11 +67,11 @@ For each addressed item, prepare a response:
 ### Step 5: Push
 
 ```bash
-git add -A && git commit -m "address review feedback: [brief summary of changes]"
+git add -A && git commit -m "fix: address review feedback — [brief summary]"
 git push
 ```
 
-**Important**: Follow the repo's commit conventions. Do NOT include `Co-Authored-By` trailers.
+**Important**: Follow Conventional Commits. Do NOT include `Co-Authored-By` trailers.
 
 Ask user to confirm before pushing.
 
