@@ -40,21 +40,37 @@ List all checks and their status. Focus on checks where `state` is `FAILURE`.
 
 The `link` field contains the URL to the check run (e.g. `https://github.com/org/repo/actions/runs/12345/job/67890`). Extract the **run ID** from the URL path: it's the number after `/runs/`.
 
-### Step 3: Read CI logs
+### Step 3: Read failure details
 
-For each failing check, extract the run ID from the `link` URL and get the logs:
+Extract the **run ID** from the `link` URL: it's the number after `/runs/`.
+Example: `https://github.com/org/repo/actions/runs/22949152885/job/66609108920` → run ID is `22949152885`.
+
+**Approach A: Annotations (fast, recommended)**
 
 ```bash
-# Extract run ID from link URL (the number after /runs/)
-# e.g. https://github.com/org/repo/actions/runs/22949152885/job/66609108920
-# → run ID is 22949152885
+# Get error annotations — concise summary of all failures
+gh api repos/{owner}/{repo}/actions/runs/<run-id>/annotations --jq '.[] | select(.annotation_level == "failure") | {path, start_line, message}'
+```
 
+If the annotations endpoint is unavailable or empty, use the check run annotations:
+```bash
+# Get job IDs first
+gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion == "failure") | {name, id: .databaseId}'
+
+# Get annotations per job
+gh api repos/{owner}/{repo}/check-runs/<job-id>/annotations --jq '.[] | {path, start_line, message, annotation_level}'
+```
+
+Annotations contain: file path, line number, and error message — enough to diagnose and fix without reading full logs.
+
+**Approach B: Full logs (when annotations are insufficient)**
+
+```bash
 gh run view <run-id> --log-failed
 ```
 
-If `--log-failed` output is too large or empty, use:
+If output is too large, read per job:
 ```bash
-gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion == "failure") | {name, id: .databaseId}'
 gh run view <run-id> --log --job-id <job-id> | tail -100
 ```
 
