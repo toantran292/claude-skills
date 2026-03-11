@@ -26,7 +26,7 @@ Produces a structured overview: architecture, modules, integrations, entry point
 /design-feature add Zillow lead ingestion support
 ```
 
-Produces a system design proposal: architecture flow, affected modules, risks, and validation strategy. Use this before `/implement-ticket` for complex features.
+Produces a system design proposal: architecture flow, affected modules, risks, and validation strategy. Use this before `/implement-ticket` for complex features — the design stays in conversation context and `/implement-ticket` will use it automatically.
 
 ## Full manual workflow
 

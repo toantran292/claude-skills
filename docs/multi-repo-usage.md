@@ -29,6 +29,8 @@ Produces system design with cross-service contracts, deployment order, and integ
 
 ### Implement per repo
 
+`/design-feature` output stays in conversation context. When you run `/implement-ticket` next, it automatically uses the design (affected modules, implementation strategy, risks) — no need to copy-paste.
+
 Open each repo and run `/implement-ticket` with a scoped description:
 
 **In api-service:**

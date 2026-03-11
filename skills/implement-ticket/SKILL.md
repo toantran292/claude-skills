@@ -15,6 +15,8 @@ Ticket: **$ARGUMENTS**
 
 If no description provided, ask the user to describe the task.
 
+If `/design-feature` was run earlier in this conversation, use its output (architecture flow, affected modules, implementation strategy, risks) as context — skip redundant analysis in Steps 1-3.
+
 ## Process
 
 ### Step 1: Clarify the ticket
