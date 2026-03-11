@@ -1,5 +1,5 @@
 ---
-name: review-fix-cycle
+name: workflow-review-fix
 description: Full review-fix-recheck workflow for a branch. Reviews code across repos, generates fix plan, applies fixes, then re-reviews to verify.
 argument-hint: "branch-name"
 disable-model-invocation: true
@@ -129,7 +129,7 @@ Date: <current date>
 ## Final Verdict
 - [ ] APPROVED - Ready to merge
 - [ ] CHANGES REQUESTED - See remaining issues
-- [ ] NEEDS ANOTHER CYCLE - Run /review-fix-cycle again
+- [ ] NEEDS ANOTHER CYCLE - Run /workflow-review-fix again
 
 ## Remaining Action Items
 1. ...
