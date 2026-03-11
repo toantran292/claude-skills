@@ -75,7 +75,7 @@ done
 
 # Required scripts
 echo "--- Scripts ---"
-for s in install.sh relink.sh validate.sh; do
+for s in install.sh relink.sh validate.sh init-rules.sh; do
   check "scripts/$s"
 done
 

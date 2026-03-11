@@ -120,7 +120,23 @@ For implementing a feature across multiple services:
 
 See [docs/multi-repo-usage.md](docs/multi-repo-usage.md) for the full guide.
 
-## Update
+## Setup
+
+### Install skills
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/toantran292/claude-skills/main/scripts/install.sh | bash
+```
+
+### Init rules in your project
+
+Copy shared rules and output styles so skills have full context:
+
+```bash
+bash ~/.claude-skills/scripts/init-rules.sh /path/to/your/project
+```
+
+### Update
 
 ```bash
 cd ~/.claude-skills && git pull && bash scripts/relink.sh
