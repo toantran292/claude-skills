@@ -53,3 +53,48 @@ cd ~/.claude-skills && git pull
 ```
 
 Symlinks update automatically.
+
+## Contributing
+
+Want to add a new skill? Fork this repo and submit a PR.
+
+### Quick way (using `create-skill`)
+
+If you already have the skills installed:
+
+```
+/create-skill a skill that does X
+```
+
+This will scaffold the skill, update the README, and create a PR for you.
+
+### Manual way
+
+1. **Fork** this repo
+2. **Create your skill** directory:
+   ```
+   skills/<skill-name>/SKILL.md
+   ```
+3. **Follow the naming convention:**
+   - Skills (standalone): `<verb>-<noun>` (e.g. `lint-code`, `generate-tests`)
+   - Workflows (multi-step): `workflow-<verb>-<noun>` (e.g. `workflow-deploy-check`)
+4. **Use the SKILL.md format:**
+   ```yaml
+   ---
+   name: your-skill-name
+   description: One-line description
+   argument-hint: "example argument"
+   ---
+   # Your Skill
+   Instructions here...
+   ```
+5. **Update the README** — add your skill to the appropriate table (Skills or Workflows), sorted alphabetically
+6. **Submit a PR** from your fork to `main`
+
+### Conventions
+
+- Kebab-case names with verb-noun pattern
+- `$ARGUMENTS` for user input
+- `disable-model-invocation: true` only for workflows that call other skills
+- Imperative voice for instructions
+- Clear steps/phases with actionable instructions
