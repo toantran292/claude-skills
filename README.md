@@ -49,6 +49,7 @@ Single-responsibility skills that do one thing well.
 | `/enhance-prompt` | Transform a rough prompt (any language) into a clear English prompt |
 | `/create-pr` | Create a pull request with structured description and test plan |
 | `/fix-branch` | Apply targeted fixes from any source (review, PR feedback, QA, direct) |
+| `/fix-ci` | Read failing CI checks from a PR, diagnose errors, fix, and push |
 | `/generate-tests` | Generate tests for changed or untested code on the current branch |
 | `/implementation-plan` | Generate a concrete plan with affected files, order, risks, validation |
 | `/integration-check` | Validate cross-repo consistency (APIs, events, schemas, naming) |

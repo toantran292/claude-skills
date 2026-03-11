@@ -70,6 +70,7 @@ Single-responsibility skills that do one thing well. Orchestration skills delega
 | `review-branch` | Severity-ranked code review |
 | `remediation-plan` | Convert review into prioritized fix plan |
 | `fix-branch` | Apply targeted fixes from any source |
+| `fix-ci` | Diagnose and fix failing CI checks |
 | `generate-tests` | Write tests for changed or untested code |
 | `create-pr` | Create PR with structured description and test plan |
 | `integration-check` | Cross-repo consistency validation |
@@ -120,6 +121,7 @@ Focused layer:
   review-branch           (standalone — references rules/review.md)
   remediation-plan        (takes review-branch output as input)
   fix-branch              (takes any fix source as input)
+  fix-ci                  (reads CI logs via gh, fixes code issues)
   generate-tests          (standalone — tests changed files on branch)
   create-pr               (standalone — creates PR from branch)
   integration-check       (standalone — multi-repo focused)
