@@ -1,8 +1,7 @@
 ---
 name: enhance-prompt
-description: Transform a rough prompt (Vietnamese or English) into a well-structured, effective English prompt. Use when user wants to improve or translate their prompt.
+description: Transform a rough prompt (any language) into a clear, structured English prompt.
 argument-hint: "your rough prompt here"
-disable-model-invocation: true
 ---
 
 # Enhance Prompt
@@ -19,46 +18,29 @@ If no prompt was provided, ask the user to provide one.
 
 ### Step 1: Understand intent
 
-Parse the raw prompt (Vietnamese or English) and identify:
-- **Goal**: What does the user actually want to achieve?
-- **Target audience**: Who/what will receive this prompt? (ChatGPT, Claude, Midjourney, Stable Diffusion, DALL-E, a colleague, a system prompt, etc.)
-- **Context**: Any implicit context or domain knowledge
-- **Constraints**: Any limitations or requirements mentioned
+Parse the input (any language) and identify:
+- **Goal**: What the user wants to achieve
+- **Target**: Who/what receives this prompt (Claude, ChatGPT, Midjourney, etc.)
+- **Context**: Implicit domain knowledge
+- **Constraints**: Limitations or requirements
 
-### Step 2: Enhance using these principles
+### Step 2: Enhance
 
-**Clarity:**
-- Remove ambiguity — be specific about what you want
-- Replace vague words with precise ones
-- State the desired output format explicitly
-
-**Structure:**
-- Lead with the role/persona if applicable ("You are a...")
-- State the task clearly in one sentence
-- Provide context and constraints
-- Specify output format and length
-- Include examples if helpful (few-shot)
-
-**Effectiveness:**
-- Add chain-of-thought triggers ("Think step by step", "Before answering, consider...")
-- Add quality gates ("Double-check your work", "If unsure, say so")
-- Add negative constraints where useful ("Do NOT include...", "Avoid...")
-- Set the tone and style explicitly
-
-**Completeness:**
-- Fill in gaps the user likely intended but didn't state
-- Add edge case handling if relevant
-- Include success criteria — what does a good response look like?
+Apply the standards from `.claude/rules/prompts.md`:
+- Add structure (role, task, context, format)
+- Remove ambiguity with precise language
+- Add chain-of-thought triggers and quality gates where appropriate
+- Fill gaps the user likely intended
+- Include success criteria
 
 ### Step 3: Output
 
-Present the enhanced prompt in a clean code block the user can copy-paste.
+Present the enhanced prompt in a code block:
 
-Format:
 ```
-[The enhanced English prompt here]
+[Enhanced English prompt]
 ```
 
-Then briefly explain (2-3 bullet points max) what you changed and why.
+Explain what changed (2-3 bullets max).
 
-If the original prompt could be interpreted multiple ways, present 2 variants and let the user pick.
+If the original could be interpreted multiple ways, present 2 variants and let the user pick.

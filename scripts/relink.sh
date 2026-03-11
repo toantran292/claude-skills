@@ -1,15 +1,18 @@
 #!/bin/bash
-# Re-symlink all skills without pulling from remote
-# Useful for local development or fixing broken symlinks
+# Re-symlink all skills to ~/.claude/skills/
+# Usage: bash scripts/relink.sh
 
 set -e
 
-INSTALL_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+INSTALL_DIR="$(dirname "$SCRIPT_DIR")"
 SKILL_DIR="$HOME/.claude/skills"
 
 mkdir -p "$SKILL_DIR"
 
 for skill in "$INSTALL_DIR"/skills/*/; do
+  [ -f "$skill/SKILL.md" ] || continue
+
   name=$(basename "$skill")
   target="$SKILL_DIR/$name"
 
@@ -25,4 +28,4 @@ for skill in "$INSTALL_DIR"/skills/*/; do
 done
 
 echo ""
-echo "Done! Skills linked to: $SKILL_DIR"
+echo "Skills linked to: $SKILL_DIR"

@@ -1,0 +1,11 @@
+# OS
+.DS_Store
+
+# Generated artifacts
+claude-context/
+review-config.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
