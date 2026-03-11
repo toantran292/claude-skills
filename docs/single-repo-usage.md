@@ -26,7 +26,7 @@ Produces a structured overview: architecture, modules, integrations, entry point
 /design-feature add Zillow lead ingestion support
 ```
 
-Produces a system design proposal: architecture flow, affected modules, risks, and validation strategy. The design is saved to `.claude/design-<feature>.md` so `/implement-ticket` can read it — even in a new conversation.
+Produces a system design proposal: architecture flow, affected modules, risks, and validation strategy. The design is saved to `.claude/design.md` so `/implement-ticket` can read it — even in a new conversation.
 
 ## Full manual workflow
 

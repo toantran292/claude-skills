@@ -108,16 +108,11 @@ Identify:
 
 ## Persistence
 
-After presenting the design, save it to a file so it survives across conversations:
+After presenting the design, save it to `.claude/design.md` so it survives across conversations.
 
-```bash
-# Save to project root (or shared location for multi-repo)
-.claude/design-<feature-slug>.md
-```
+Ask the user: **"Save this design to `.claude/design.md`?"**
 
-Ask the user: **"Save this design to `.claude/design-<feature-slug>.md`?"**
-
-This allows `/implement-ticket` to read the design in a new conversation or after context compression.
+This file is always overwritten with the latest design. `/implement-ticket` reads it automatically. Old designs are replaced — if the user wants to keep a previous design, they should rename or move it first.
 
 ## Limitations
 
