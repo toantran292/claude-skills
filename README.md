@@ -20,7 +20,7 @@ This clones the toolkit to `~/.claude-skills` and symlinks all skills to `~/.cla
 bash ~/.claude-skills/scripts/init-rules.sh /path/to/your/project
 ```
 
-This copies shared rules (`.claude/rules/`), output styles (`.claude/output-styles/`), and commit conventions (`CLAUDE.md`) into your project — so skills have full context when working in that project.
+This copies shared rules (`.claude/rules/`), output styles (`.claude/output-styles/`), and commit conventions into your project's `.claude/` directory — so skills have full context when working in that project. Does not touch your `CLAUDE.md`.
 
 ### 3. Start using
 
@@ -308,7 +308,6 @@ bash ~/.claude-skills/scripts/init-rules.sh /path/to/your/project
 This copies:
 - `.claude/rules/*.md` — code review standards, prompt rules, workflows
 - `.claude/output-styles/*.md` — review report, fix plan, explanatory formats
-- `CLAUDE.md` — commit conventions (Conventional Commits, no Co-Authored-By)
 
 Idempotent — safe to run multiple times. Skips files that already exist.
 

@@ -57,7 +57,7 @@ done
 
 # Required rules
 echo "--- Rules ---"
-for r in review.md prompts.md repository-structure.md single-repo-workflow.md multi-repo-workflow.md; do
+for r in review.md prompts.md repository-structure.md single-repo-workflow.md multi-repo-workflow.md commit-conventions.md; do
   check ".claude/rules/$r"
 done
 

@@ -38,9 +38,9 @@ What this copies:
 - `.claude/output-styles/review-report.md` — review output format
 - `.claude/output-styles/fix-plan.md` — fix plan output format
 - `.claude/output-styles/explanatory-dev.md` — explanation output format
-- `CLAUDE.md` — commit conventions (Conventional Commits, no Co-Authored-By)
+- `.claude/rules/commit-conventions.md` — Conventional Commits, no Co-Authored-By
 
-This is idempotent — running it again skips files that already exist.
+Does not touch your project's `CLAUDE.md`. This is idempotent — running it again skips files that already exist.
 
 ## Step 3: Verify installation
 

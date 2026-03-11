@@ -40,59 +40,6 @@ for style in "$SOURCE_DIR"/.claude/output-styles/*.md; do
   fi
 done
 
-# Ensure CLAUDE.md exists with commit conventions
-CLAUDE_MD="$TARGET/CLAUDE.md"
-if [ ! -f "$CLAUDE_MD" ]; then
-  cat > "$CLAUDE_MD" << 'HEREDOC'
-# Project
-
-## Commit conventions
-
-Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/):
-
-```
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-- **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`
-- **Scope**: optional, identifies the affected area (e.g. `feat(api): ...`, `fix(auth): ...`)
-- **Breaking changes**: add `!` after type/scope (e.g. `feat!: ...`) or `BREAKING CHANGE:` footer
-- NEVER include `Co-Authored-By` trailers from Claude or any AI agent in commits
-
-## Quality standards
-
-All code-related skills follow the standards defined in `.claude/rules/review.md`.
-HEREDOC
-  echo "  OK CLAUDE.md (created)"
-elif ! grep -q "Conventional Commits" "$CLAUDE_MD"; then
-  cat >> "$CLAUDE_MD" << 'HEREDOC'
-
-## Commit conventions
-
-Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/):
-
-```
-<type>[optional scope]: <description>
-
-[optional body]
-
-[optional footer(s)]
-```
-
-- **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`
-- **Scope**: optional, identifies the affected area (e.g. `feat(api): ...`, `fix(auth): ...`)
-- **Breaking changes**: add `!` after type/scope (e.g. `feat!: ...`) or `BREAKING CHANGE:` footer
-- NEVER include `Co-Authored-By` trailers from Claude or any AI agent in commits
-HEREDOC
-  echo "  OK CLAUDE.md (appended commit conventions)"
-else
-  echo "  SKIP CLAUDE.md (commit conventions already present)"
-fi
-
 echo ""
-echo "Done. Rules, output styles, and CLAUDE.md initialized in: $TARGET"
+echo "Done. Rules and output styles initialized in: $TARGET/.claude/"
 echo "Skills will now have full context when used in this project."

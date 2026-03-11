@@ -92,18 +92,18 @@ claude-skills/
 │   ├── notify.example.sh          Send notifications
 │   └── protect-critical-files.example.sh  Block protected file edits
 │
-├── .claude/output-styles/                 3 standardized output formats
-│   ├── review-report.md           Severity buckets + score + verdict
-│   ├── fix-plan.md                Priority groups + validation
-│   └── explanatory-dev.md         Lead-with-answer format
-│
 ├── .claude/
-│   └── rules/                     5 shared standards
-│       ├── review.md              Code review: SOLID, Security, Performance, ACID
-│       ├── prompts.md             Prompt engineering rules
-│       ├── repository-structure.md  Naming and composition conventions
-│       ├── single-repo-workflow.md  11-step single-repo workflow
-│       └── multi-repo-workflow.md   10-step multi-repo workflow
+│   ├── rules/                     6 shared standards
+│   │   ├── review.md              Code review: SOLID, Security, Performance, ACID
+│   │   ├── prompts.md             Prompt engineering rules
+│   │   ├── repository-structure.md  Naming and composition conventions
+│   │   ├── single-repo-workflow.md  11-step single-repo workflow
+│   │   ├── multi-repo-workflow.md   10-step multi-repo workflow
+│   │   └── commit-conventions.md    Conventional Commits, no Co-Authored-By
+│   └── output-styles/             3 standardized output formats
+│       ├── review-report.md       Severity buckets + score + verdict
+│       ├── fix-plan.md            Priority groups + validation
+│       └── explanatory-dev.md     Lead-with-answer format
 │
 ├── docs/                          Documentation
 │   ├── getting-started.md         Quick start guide
@@ -253,7 +253,7 @@ Focused Layer (standalone, no dependencies)
 
 **Problem**: Skills reference `.claude/rules/*.md` and `.claude/output-styles/*.md`, but these don't exist in user projects.
 
-**Solution**: `scripts/init-rules.sh` copies rules, output styles, and CLAUDE.md conventions to any target project.
+**Solution**: `scripts/init-rules.sh` copies rules and output styles into the target project's `.claude/` directory. Does not touch `CLAUDE.md`.
 
 **Benefit**: Skills work correctly in any project after one-time init. The init is idempotent and non-destructive.
 
@@ -268,6 +268,7 @@ Rules in `.claude/rules/` define standards that multiple skills reference:
 | `repository-structure.md` | Skill naming, composition, variables | `create-skill` |
 | `single-repo-workflow.md` | 11-step workflow for single-repo tasks | `implement-ticket`, workflow docs |
 | `multi-repo-workflow.md` | 10-step workflow for multi-repo tasks | `implement-ticket`, `integration-check`, workflow docs |
+| `commit-conventions.md` | Conventional Commits format, no Co-Authored-By | All skills that commit (`fix-branch`, `fix-ci`, `address-feedback`) |
 
 ## Output Styles
 
