@@ -52,7 +52,7 @@ Skills are composable. Orchestration skills coordinate focused skills. Focused s
 
 ```
 claude-skills/
-├── skills/              15 skills (4 orchestration + 11 focused)
+├── skills/              16 skills (4 orchestration + 12 focused)
 │   └── <skill-name>/
 │       └── SKILL.md     One file per skill, YAML frontmatter + markdown
 ├── agents/              5 specialized subagent definitions
@@ -91,6 +91,7 @@ Single-responsibility skills that do one thing well. Use these for fine-grained 
 | `/architecture-scan` | Map codebase structure, modules, dependencies, hot spots | Path or description (optional) |
 | `/implementation-plan` | Concrete plan with affected files, order, risks, validation | Task description |
 | `/review-branch` | Staff-level code review with severity-ranked issues | Branch name (optional, defaults to current) |
+| `/review-pr` | Staff-level code review on a GitHub PR via `gh` CLI | PR number or "current" |
 | `/remediation-plan` | Convert review findings into prioritized fix plan | Review findings or "from last review" |
 | `/fix-branch` | Apply targeted fixes from any source | Description, PR number, or "from last review" |
 | `/fix-ci` | Diagnose failing CI checks, fix code issues, push | PR number or "current" |
@@ -159,6 +160,21 @@ Reviews code changes with the rigor of a Staff/Principal Engineer:
 </details>
 
 <details>
+<summary><code>/review-pr</code> — Review code on a GitHub PR</summary>
+
+Reviews code changes on a pull request remotely via `gh` CLI — no need to check out the branch:
+
+- Fetches PR diff, metadata, and existing review comments via `gh pr diff` and `gh api`
+- Applies the same Staff/Principal Engineer standards as `/review-branch`
+- Can optionally post the review directly to GitHub as PR review comments
+
+```
+/review-pr 42
+/review-pr current
+```
+</details>
+
+<details>
 <summary><code>/fix-ci</code> — Fix failing CI checks</summary>
 
 Reads CI check results from a PR via `gh` CLI, diagnoses failures, and fixes them:
@@ -200,7 +216,7 @@ Specialized subagents with focused expertise. Skills delegate to these for domai
 | Agent | Expertise | Used by |
 |-------|-----------|---------|
 | `system-architect` | Architecture analysis, implementation planning | `/architecture-scan`, `/implementation-plan` |
-| `code-reviewer` | Staff-level code review, bug detection | `/review-branch` |
+| `code-reviewer` | Staff-level code review, bug detection | `/review-branch`, `/review-pr` |
 | `code-fixer` | Minimal, correct code fixes | `/fix-branch`, `/fix-ci` |
 | `security-reviewer` | OWASP Top 10, auth, data protection | `/review-branch` (security focus) |
 | `prompt-engineer` | Prompt crafting and optimization | `/enhance-prompt` |

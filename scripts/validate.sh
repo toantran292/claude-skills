@@ -32,7 +32,7 @@ done
 
 # Required skills (each must have SKILL.md)
 echo "--- Skills ---"
-for s in analyze-codebase design-feature implement-ticket address-feedback enhance-prompt architecture-scan implementation-plan review-branch remediation-plan fix-branch fix-ci generate-tests create-pr integration-check create-skill; do
+for s in analyze-codebase design-feature implement-ticket address-feedback enhance-prompt architecture-scan implementation-plan review-branch review-pr remediation-plan fix-branch fix-ci generate-tests create-pr integration-check create-skill; do
   check "skills/$s/SKILL.md"
 done
 
