@@ -10,6 +10,21 @@ SKILL_DIR="$HOME/.claude/skills"
 
 mkdir -p "$SKILL_DIR"
 
+# Remove stale symlinks pointing to this installation
+for link in "$SKILL_DIR"/*; do
+  [ -L "$link" ] || continue
+  target=$(readlink "$link")
+  case "$target" in
+    "$INSTALL_DIR"/skills/*)
+      if [ ! -e "$link" ]; then
+        name=$(basename "$link")
+        rm "$link"
+        echo "  REMOVED $name (skill no longer exists)"
+      fi
+      ;;
+  esac
+done
+
 for skill in "$INSTALL_DIR"/skills/*/; do
   [ -f "$skill/SKILL.md" ] || continue
 
