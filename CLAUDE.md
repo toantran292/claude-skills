@@ -27,6 +27,12 @@ scripts/         Install, relink, and validation scripts
 - Output styles in `output-styles/` define reusable formats for artifacts
 - Hook examples in `hooks/` are `.example.sh` files — not active by default
 
+## Commit conventions
+
+- Follow the repository's existing commit message style
+- NEVER include `Co-Authored-By` trailers from Claude or any AI agent in commits
+- Keep commit messages concise and descriptive — focus on "what" and "why"
+
 ## Quality standards
 
 All code-related skills follow the standards defined in `.claude/rules/review.md`:
