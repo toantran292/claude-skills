@@ -17,7 +17,10 @@ If no description provided, ask the user to describe the task.
 
 Check for existing design context (in priority order):
 1. **Conversation context** — if `/design-feature` was run earlier in this conversation
-2. **Saved design file** — read `.claude/design.md` if it exists
+2. **Saved design files** — check `.claude/designs/` for a design matching the ticket description
+   - If one match: use it
+   - If multiple matches: list them and ask the user which to use
+   - If no match: proceed normally from Step 1
 
 If design context is found, use it (architecture flow, affected modules, implementation strategy, risks) and skip redundant analysis in Steps 1-3.
 

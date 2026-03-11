@@ -108,11 +108,11 @@ Identify:
 
 ## Persistence
 
-After presenting the design, save it to `.claude/design.md` so it survives across conversations.
+After presenting the design, save it to `.claude/designs/<feature-slug>.md` (e.g. `.claude/designs/notification-preferences.md`).
 
-Ask the user: **"Save this design to `.claude/design.md`?"**
+Ask the user: **"Save this design to `.claude/designs/<feature-slug>.md`?"**
 
-This file is always overwritten with the latest design. `/implement-ticket` reads it automatically. Old designs are replaced — if the user wants to keep a previous design, they should rename or move it first.
+`/implement-ticket` looks in `.claude/designs/` for matching design files. Multiple designs can coexist for parallel work.
 
 ## Limitations
 
