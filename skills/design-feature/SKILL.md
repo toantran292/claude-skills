@@ -106,6 +106,19 @@ Identify:
 | ...      | ...      | ...      | [brief schema] |
 ```
 
+## Persistence
+
+After presenting the design, save it to a file so it survives across conversations:
+
+```bash
+# Save to project root (or shared location for multi-repo)
+.claude/design-<feature-slug>.md
+```
+
+Ask the user: **"Save this design to `.claude/design-<feature-slug>.md`?"**
+
+This allows `/implement-ticket` to read the design in a new conversation or after context compression.
+
 ## Limitations
 
 - This skill produces design, not code — use `/implementation-plan` for detailed steps

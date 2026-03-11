@@ -29,7 +29,7 @@ Produces system design with cross-service contracts, deployment order, and integ
 
 ### Implement per repo
 
-`/design-feature` output stays in conversation context. When you run `/implement-ticket` next, it automatically uses the design (affected modules, implementation strategy, risks) — no need to copy-paste.
+`/design-feature` saves its output to `.claude/design-<feature>.md`. When you open each repo and run `/implement-ticket`, it reads the saved design file automatically — even in a new conversation.
 
 Open each repo and run `/implement-ticket` with a scoped description:
 
