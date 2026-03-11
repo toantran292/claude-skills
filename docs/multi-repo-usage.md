@@ -29,13 +29,24 @@ Produces system design with cross-service contracts, deployment order, and integ
 
 ### Implement per repo
 
+Open each repo and run `/implement-ticket` with a scoped description:
+
+**In api-service:**
 ```
-cd api-service && /implement-ticket add notification preferences CRUD and publish events
-cd worker-service && /implement-ticket consume PreferenceUpdated events
-cd notification-service && /implement-ticket respect user preferences when sending
+/implement-ticket add notification preferences CRUD and publish PreferenceUpdated events
 ```
 
-Each `/implement-ticket` runs the full cycle (scan → plan → implement → review → fix) within that repo. Then validate integration across repos with `/integration-check`.
+**In worker-service:**
+```
+/implement-ticket consume PreferenceUpdated events from api-service
+```
+
+**In notification-service:**
+```
+/implement-ticket respect user preferences when sending notifications
+```
+
+Each `/implement-ticket` runs the full cycle (scan → plan → implement → test → review → fix → PR) within that repo. Then validate integration across repos with `/integration-check`.
 
 ## Manual workflow (focused skills)
 
@@ -111,28 +122,39 @@ Related PRs:
 
 **Services**: `api-service`, `worker-service`, `notification-service`
 
+Open each repo in turn and run the relevant skill:
+
+**Step 1 — Scan** (in each repo):
 ```
-# 1. Scan each service
-cd api-service && /architecture-scan
-cd worker-service && /architecture-scan
-cd notification-service && /architecture-scan
+/architecture-scan
+```
 
-# 2. Plan
-cd api-service && /implementation-plan add notification preferences endpoint
-cd worker-service && /implementation-plan consume notification preferences events
-cd notification-service && /implementation-plan send notifications via user preferences
+**Step 2 — Plan** (in each repo):
+```
+/implementation-plan add notification preferences endpoint
+```
 
-# 3. Implement in order: api → worker → notification
+**Step 3 — Implement** in order: api → worker → notification
 
-# 4. Review each
-cd api-service && /review-branch
-cd worker-service && /review-branch
-cd notification-service && /review-branch
+**Step 4 — Test** (in each repo):
+```
+/generate-tests
+```
 
-# 5. Check integration
+**Step 5 — Review** (in each repo):
+```
+/review-branch
+```
+
+**Step 6 — Check integration** (from any repo, pass all paths):
+```
 /integration-check api-service worker-service notification-service
+```
 
-# 6. Fix any issues, create PRs
+**Step 7 — Fix any issues, create PRs** (in each repo):
+```
+/fix-branch
+/create-pr
 ```
 
 ## Common risks and mitigations
