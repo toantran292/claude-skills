@@ -44,19 +44,54 @@ Hooks fire after skill execution (automation)
 └── scripts/                   # Install, relink, validate
 ```
 
+## Skill layers
+
+Skills are organized in two layers:
+
+### Orchestration skills
+
+High-level skills that coordinate focused skills into complete workflows. These do not duplicate logic — they sequence, gate, and summarize.
+
+| Skill | Orchestrates |
+|-------|-------------|
+| `analyze-codebase` | `architecture-scan`, `integration-check` (multi-repo) |
+| `design-feature` | `architecture-scan`, `integration-check` (multi-repo) |
+| `implement-ticket` | `architecture-scan` → `implementation-plan` → [implement] → `review-branch` → `remediation-plan` → `fix-branch` → `integration-check` (multi-repo) |
+
+### Focused skills
+
+Single-responsibility skills that do one thing well. Orchestration skills delegate to these.
+
+| Skill | Responsibility |
+|-------|---------------|
+| `architecture-scan` | Map codebase structure and dependencies |
+| `implementation-plan` | Produce concrete plan with files, order, risks |
+| `review-branch` | Severity-ranked code review |
+| `remediation-plan` | Convert review into prioritized fix plan |
+| `fix-branch` | Apply targeted fixes |
+| `integration-check` | Cross-repo consistency validation |
+| `enhance-prompt` | Prompt transformation |
+| `create-skill` | Scaffold new skills |
+
 ## Key design decisions
 
 ### Rules extraction
 
 Previous skills (review-branch, fix-branch, execute-prompt) each contained 50-100 lines of duplicated engineering standards (SOLID, Clean Code, Security, Performance). These are now extracted to `.claude/rules/review.md` and referenced by skills with one line.
 
-### No workflow skills
+### Orchestration over monoliths
 
-The previous version had `workflow-*` skills that orchestrated other skills. These are replaced by documented workflows in `.claude/rules/single-repo-workflow.md` and `.claude/rules/multi-repo-workflow.md`. Users follow the workflow by invoking skills in sequence, which is more flexible and debuggable than skill-calling-skill chains.
+The previous version had `workflow-*` skills with `disable-model-invocation: true` that were opaque chains. The new orchestration skills (`analyze-codebase`, `design-feature`, `implement-ticket`) improve on this by:
+- Clearly delegating to focused skills (no logic duplication)
+- Including user confirmation gates between phases
+- Supporting both single-repo and multi-repo modes
+- Producing structured output artifacts
+
+Users can also invoke focused skills directly for fine-grained control.
 
 ### Single-repo as default
 
-Skills default to working with the current repository and branch. Multi-repo support is available through `/integration-check` and the multi-repo workflow guide, but is not forced on single-repo users.
+Skills default to working with the current repository and branch. Multi-repo support is available through `/integration-check`, `/analyze-codebase` (multi-path mode), and the multi-repo workflow guide.
 
 ### Output to stdout
 
@@ -65,12 +100,21 @@ Skills output to stdout rather than writing to files (the previous version wrote
 ## Skill dependency graph
 
 ```
-enhance-prompt          (standalone — no dependencies)
-architecture-scan       (standalone — no dependencies)
-implementation-plan     (benefits from architecture-scan output)
-review-branch           (standalone — references rules/review.md)
-remediation-plan        (takes review-branch output as input)
-fix-branch              (takes remediation-plan or review output as input)
-integration-check       (standalone — multi-repo focused)
-create-skill            (standalone — meta skill)
+Orchestration layer:
+  analyze-codebase ──→ architecture-scan, integration-check
+  design-feature ────→ architecture-scan, integration-check
+  implement-ticket ──→ architecture-scan → implementation-plan
+                       → [implement] → review-branch
+                       → remediation-plan → fix-branch
+                       → integration-check (multi-repo)
+
+Focused layer:
+  enhance-prompt          (standalone — no dependencies)
+  architecture-scan       (standalone — no dependencies)
+  implementation-plan     (benefits from architecture-scan output)
+  review-branch           (standalone — references rules/review.md)
+  remediation-plan        (takes review-branch output as input)
+  fix-branch              (takes remediation-plan or review output as input)
+  integration-check       (standalone — multi-repo focused)
+  create-skill            (standalone — meta skill)
 ```

@@ -2,9 +2,35 @@
 
 Step-by-step workflow for using this toolkit inside a single repository.
 
-## Full workflow
+## One-command workflow
 
-For non-trivial features or changes:
+For a complete ticket implementation, use the orchestration skill:
+
+```
+/implement-ticket add user notification preferences with email and Slack channels
+```
+
+This runs the full cycle: scan → plan → implement → review → fix → summary.
+
+## Understand an unfamiliar codebase
+
+```
+/analyze-codebase
+```
+
+Produces a structured overview: architecture, modules, integrations, entry points, and complexity areas. Good for onboarding or before starting a large task.
+
+## Design before implementing
+
+```
+/design-feature add Zillow lead ingestion support
+```
+
+Produces a system design proposal: architecture flow, affected modules, risks, and validation strategy. Use this before `/implement-ticket` for complex features.
+
+## Full manual workflow
+
+For maximum control, invoke focused skills in sequence:
 
 ### 1. Clarify the task
 

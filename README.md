@@ -27,6 +27,20 @@ Shared engineering standards live in `.claude/rules/` and are referenced by skil
 
 ## Skills
 
+### Orchestration skills
+
+High-level skills that coordinate lower-level skills into complete workflows.
+
+| Skill | Description |
+|-------|-------------|
+| `/analyze-codebase` | Understand a repo quickly — architecture, modules, integrations, complexity |
+| `/design-feature` | Transform a feature request into a system design proposal |
+| `/implement-ticket` | End-to-end: scan → plan → implement → review → fix |
+
+### Focused skills
+
+Single-responsibility skills that do one thing well.
+
 | Skill | Description |
 |-------|-------------|
 | `/architecture-scan` | Analyze codebase structure, modules, dependencies, and hot spots |

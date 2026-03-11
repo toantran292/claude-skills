@@ -9,7 +9,37 @@ Workflow for implementing one task across multiple repositories.
 - Shared library updates that affect downstream consumers
 - API changes between producer and consumer services
 
-## Full workflow
+## Using orchestration skills
+
+### Analyze all services at once
+
+```
+/analyze-codebase api-service, worker-service, notification-service
+```
+
+Produces per-repo summaries plus a cross-repo dependency map with integration risks.
+
+### Design a cross-service feature
+
+```
+/design-feature add real-time notification preferences across api, worker, and notification services
+```
+
+Produces system design with cross-service contracts, deployment order, and integration risks.
+
+### Implement per repo
+
+```
+cd api-service && /implement-ticket add notification preferences CRUD and publish events
+cd worker-service && /implement-ticket consume PreferenceUpdated events
+cd notification-service && /implement-ticket respect user preferences when sending
+```
+
+Each `/implement-ticket` runs the full cycle (scan → plan → implement → review → fix) within that repo. Then validate integration across repos with `/integration-check`.
+
+## Manual workflow (focused skills)
+
+For maximum control, invoke focused skills in sequence:
 
 ### 1. Clarify the task
 

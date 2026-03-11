@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.1.0 — 2026-03-11
+
+Add orchestration skills that coordinate focused skills into complete workflows.
+
+### Added
+- 3 orchestration skills: `analyze-codebase`, `design-feature`, `implement-ticket`
+- Orchestration skills section in README
+- Updated docs: architecture (skill layers), single-repo, multi-repo, migration guide
+- Updated examples: single-repo and multi-repo now show both orchestration and manual approaches
+
 ## v2.0.0 — 2026-03-11
 
 Complete architecture refactor following Claude Code best practices.
