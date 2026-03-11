@@ -1,14 +1,17 @@
 # Example: Multi-Repo Session
 
-Examples of using the toolkit for a feature spanning multiple services.
+Two complete examples of using the toolkit for a feature spanning multiple services.
 
 ---
 
-## Example A: Using orchestration skills (recommended)
+## Example A: Orchestration (recommended)
 
 ### Task
 
-Add user notification preferences across 3 services: `api-service` (REST API), `worker-service` (async jobs), `notification-service` (sends emails/SMS).
+Add user notification preferences across 3 services:
+- `api-service` — REST API, owns user data
+- `worker-service` — async job processing, consumes events
+- `notification-service` — sends emails and SMS
 
 ### Step 1: Analyze all services
 
@@ -19,62 +22,135 @@ Add user notification preferences across 3 services: `api-service` (REST API), `
 
 ## api-service
 - Stack: NestJS + Prisma + PostgreSQL
-- Entry Points: 24 REST endpoints
+- Entry Points: 24 REST endpoints, 1 cron job
 - Owns: users, payments tables
+- Publishes: UserCreated, UserUpdated events to Redis
 
 ## worker-service
 - Stack: Node.js + Bull + Redis
 - Entry Points: 8 queue consumers
-- Subscribes: events from api-service
+- Subscribes: UserCreated, UserUpdated from api-service
+- Owns: job_logs table
 
 ## notification-service
 - Stack: NestJS + Nodemailer + Twilio
-- Entry Points: 3 queue consumers
+- Entry Points: 3 queue consumers (email, sms, push)
 - Owns: notification_logs table
+- Consumes: SendNotification jobs from worker-service
 
-## Cross-Repo Map
-| Source | Target | Contract Type | Risk |
-|--------|--------|--------------|------|
-| api-service | worker-service | Redis events | Medium — no schema validation |
-| worker-service | notification-service | Bull queue | Low — shared job types |
+## Cross-Repo Dependency Map
+| Source | Target | Contract | Risk |
+|--------|--------|----------|------|
+| api-service | worker-service | Redis events (UserCreated, UserUpdated) | Medium — no schema validation |
+| worker-service | notification-service | Bull queue (SendNotification) | Low — shared job types |
+
+## Integration Risks
+- No formal schema validation between api-service → worker-service events
+- Event field naming: api-service uses camelCase, worker-service mixes camelCase and snake_case
 ```
 
 ### Step 2: Design the cross-service feature
 
 ```
-> /design-feature add notification preferences that users configure via API and all channels respect
+> /design-feature add notification preferences that users configure via API and all services respect
 
 # Feature Design: Notification Preferences
 
+## Feature Overview
+- Goal: Users control which notification channels they receive (email, SMS, push)
+- Trigger: User updates preferences via api-service REST endpoint
+- Scope: Preferences stored in api-service, enforced in notification-service
+
 ## Architecture Flow
-1. User configures preferences via api-service PUT /preferences →
-2. api-service publishes PreferenceUpdated event →
-3. worker-service caches preferences, filters outgoing notifications →
-4. notification-service checks preferences before each send
+1. User calls PUT /api/v1/users/:id/preferences in api-service →
+2. api-service persists to notification_preferences table →
+3. api-service publishes PreferenceUpdated event to Redis →
+4. worker-service consumes event, caches preferences in Redis →
+5. When sending notification, worker-service checks cached preferences →
+6. notification-service receives only opted-in channel jobs
 
 ## Cross-Service Contracts
 | Contract | Provider | Consumer | Shape |
 |----------|----------|----------|-------|
-| GET /users/:id/preferences | api-service | worker-service | { email: bool, sms: bool } |
-| PreferenceUpdated event | api-service | worker-service | { userId, preferences } |
+| GET /users/:id/preferences | api-service | worker-service | `{ email: boolean, sms: boolean, push: boolean }` |
+| PreferenceUpdated event | api-service | worker-service | `{ userId: string, preferences: { email, sms, push } }` |
+| SendNotification job | worker-service | notification-service | `{ userId, channel, payload }` (unchanged) |
+
+## Implementation Strategy
+| Phase | Service | What | Why This Order |
+|-------|---------|------|----------------|
+| 1 | api-service | Migration + CRUD + event publishing | Provider first |
+| 2 | worker-service | Consume event + cache + filter | Consumer of api-service |
+| 3 | notification-service | No changes needed | Already receives filtered jobs |
 
 ## Risks
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Event field naming mismatch | Runtime failure | Define schema first, validate with /integration-check |
+| Risk | Likelihood | Impact | Mitigation |
+|------|-----------|--------|------------|
+| Event field naming mismatch | High | Runtime failures | Define schema now, validate with /integration-check |
+| Cache stale after preference update | Medium | Wrong channel used | TTL on cache + event-driven invalidation |
+| Partial deployment | Medium | Inconsistent behavior | Deploy in order: api → worker → notification |
+
+Save to .claude/designs/notification-preferences.md? [y]
+> y
+Saved.
 ```
 
 ### Step 3: Implement per repo
 
+Each repo is opened in a separate Claude Code session.
+
+**In api-service** (provider — implement first):
 ```
-> cd api-service && /implement-ticket add notification preferences CRUD and publish PreferenceUpdated event
-[scan → plan → implement → review → fix → done]
+> /implement-ticket add notification preferences CRUD endpoints and publish PreferenceUpdated events
 
-> cd worker-service && /implement-ticket consume PreferenceUpdated events and filter notifications
-[scan → plan → implement → review → fix → done]
+Loaded design from .claude/designs/notification-preferences.md ✓
 
-> cd notification-service && /implement-ticket check user preferences before sending
-[scan → plan → implement → review → fix → done]
+Step 1: Confirmed scope — CRUD + event publishing only (this repo)
+Step 2: Scanned architecture — users module, Prisma, Redis publisher
+Step 3: Plan — 5 files: migration, DTO, service, controller, event publisher
+Step 4: Implemented all files
+Step 5: Generated 8 tests (CRUD + event publishing + validation)
+Step 6: Review — 0 Critical, 0 Major
+Step 7: Created PR #42
+
+# Summary
+- 5 files changed (1 migration, 2 DTOs, 1 service, 1 controller)
+- 8 tests added
+- PR: https://github.com/org/api-service/pull/42
+```
+
+**In worker-service** (consumer — implement second):
+```
+> /implement-ticket consume PreferenceUpdated events from api-service and cache user preferences
+
+Loaded design from .claude/designs/notification-preferences.md ✓
+
+Step 1: Confirmed scope — event consumer + Redis cache + job filtering
+Step 2: Scanned architecture — Bull consumers, Redis client
+Step 3: Plan — 3 files: event handler, preference cache, job filter
+Step 4: Implemented all files
+Step 5: Generated 6 tests (event handling + caching + filtering)
+Step 6: Review — 1 Major (using `user_id` instead of `userId` — mismatch with api-service)
+Step 7: Fixed field naming to match api-service contract
+Step 8: Created PR #18
+
+# Summary
+- 3 files changed
+- 6 tests added, 1 Major fixed
+- PR: https://github.com/org/worker-service/pull/18
+```
+
+**In notification-service** (no changes needed per design):
+```
+> /implement-ticket check if notification-service needs changes for user preferences
+
+Loaded design from .claude/designs/notification-preferences.md ✓
+
+Analysis: notification-service receives SendNotification jobs from worker-service.
+The job contract `{ userId, channel, payload }` is unchanged.
+Worker-service now filters jobs before sending — notification-service needs no changes.
+
+No implementation needed for this repo.
 ```
 
 ### Step 4: Validate integration
@@ -82,54 +158,159 @@ Add user notification preferences across 3 services: `api-service` (REST API), `
 ```
 > /integration-check api-service worker-service notification-service
 
-### Event Schemas
-| Publisher | Subscriber | Event | Status | Issues |
-|-----------|------------|-------|--------|--------|
-| api-service | worker-service | PreferenceUpdated | MISMATCH | api uses `userId`, worker expects `user_id` |
+## API Contracts
+| Endpoint | Provider | Consumer | Status |
+|----------|----------|----------|--------|
+| GET /users/:id/preferences | api-service | worker-service | ✓ Match |
 
-> cd worker-service && /fix-branch
-# Fix: rename user_id to userId
+## Event Schemas
+| Event | Publisher | Subscriber | Status |
+|-------|-----------|------------|--------|
+| PreferenceUpdated | api-service | worker-service | ✓ Match |
+| SendNotification | worker-service | notification-service | ✓ Match (unchanged) |
 
-> /integration-check api-service worker-service notification-service
-# All checks pass
+## Naming Consistency
+| Concept | api-service | worker-service | notification-service | Status |
+|---------|-------------|----------------|---------------------|--------|
+| User ID field | userId | userId | userId | ✓ Consistent |
+| Preferences shape | { email, sms, push } | { email, sms, push } | — | ✓ Consistent |
+
+## Result: All checks pass ✓
 ```
 
-### Step 5: Create PRs
+### Step 5: Create PRs (already done per repo)
 
 ```
-api-service#42 — feat: add notification preferences CRUD
-worker-service#18 — feat: consume preference events
-notification-service#7 — feat: respect user preferences
+Deploy order:
+1. api-service#42      — preferences CRUD + events
+2. worker-service#18   — consume events + filter jobs
+3. notification-service — no changes
 
-Deploy order: api-service → worker-service → notification-service
+Related PRs linked in each PR description.
 ```
 
 ---
 
-## Example B: Using focused skills (manual control)
+## Example B: Manual step-by-step
 
-### Same task, invoking each skill individually:
+### Same task, invoking each focused skill individually.
+
+### Step 1: Scan each service
+
+**In api-service:**
+```
+> /architecture-scan
+
+## Modules: auth, users, notifications, payments
+## Entry Points: 24 REST endpoints, 1 cron, Redis publisher
+## Hot Spots: users.service.ts (high churn)
+```
+
+**In worker-service:**
+```
+> /architecture-scan
+
+## Modules: events, jobs, cache
+## Entry Points: 8 Bull queue consumers
+## Hot Spots: event-handler.ts (no error handling for unknown events)
+```
+
+**In notification-service:**
+```
+> /architecture-scan
+
+## Modules: email, sms, push
+## Entry Points: 3 queue consumers
+## Hot Spots: email.service.ts (200+ lines, no retry logic)
+```
+
+### Step 2: Plan per repo
+
+**In api-service:**
+```
+> /implementation-plan add notification preferences CRUD and publish PreferenceUpdated events
+
+## 5 files affected
+## Order: migration → DTO → service → controller → event publisher
+```
+
+**In worker-service:**
+```
+> /implementation-plan consume PreferenceUpdated events and filter notification jobs by preference
+
+## 3 files affected
+## Order: event handler → preference cache → job filter
+```
+
+### Step 3: Implement (in order: api-service → worker-service)
+
+Write code in each repo following the plan.
+
+### Step 4: Test per repo
+
+**In api-service:**
+```
+> /generate-tests
+8 tests generated. All passing ✓
+```
+
+**In worker-service:**
+```
+> /generate-tests
+6 tests generated. All passing ✓
+```
+
+### Step 5: Review per repo
+
+**In api-service:**
+```
+> /review-branch
+0 Critical, 0 Major. Production Readiness: 9/10. APPROVE ✓
+```
+
+**In worker-service:**
+```
+> /review-branch
+1 Major: field naming mismatch (user_id vs userId)
+Production Readiness: 6/10. REVISE.
+```
+
+### Step 6: Fix issues
+
+**In worker-service:**
+```
+> /fix-branch rename user_id to userId to match api-service contract
+
+Fixed: event-handler.ts, preference-cache.ts — renamed user_id → userId
+```
+
+### Step 7: Integration check
 
 ```
-# 1. Scan each service
-cd api-service && /architecture-scan
-cd worker-service && /architecture-scan
-cd notification-service && /architecture-scan
+> /integration-check api-service worker-service notification-service
 
-# 2. Plan per repo
-cd api-service && /implementation-plan add notification preferences endpoint
-cd worker-service && /implementation-plan consume notification preferences events
-cd notification-service && /implementation-plan send notifications via user preferences
+All contracts match ✓
+```
 
-# 3. Implement in order: api → worker → notification
+### Step 8: Create PRs
 
-# 4. Review each
-cd api-service && /review-branch
-cd worker-service && /review-branch
-cd notification-service && /review-branch
+**In api-service:**
+```
+> /create-pr
+PR created: https://github.com/org/api-service/pull/42
+```
 
-# 5. Check integration
-/integration-check api-service worker-service notification-service
+**In worker-service:**
+```
+> /create-pr
+PR created: https://github.com/org/worker-service/pull/18
+```
 
-# 6. Fix mismatches, re-check, create PRs
+Both PRs include:
+```
+Related PRs:
+- api-service#42 (preferences CRUD + events)
+- worker-service#18 (consume events + filter)
+
+Deploy order: api-service → worker-service
 ```

@@ -1,80 +1,162 @@
 # Migration Guide
 
-How this repository evolved from the previous version.
+How to upgrade from previous versions of the Claude Skills Toolkit.
 
-## What changed
+## Upgrading to Latest
 
-### Structural changes
+```bash
+cd ~/.claude-skills && git pull && bash scripts/relink.sh
+```
 
-| Before | After | Reason |
-|--------|-------|--------|
-| Monolithic SKILL.md (100-200 lines each) | Concise SKILL.md + shared rules | Reduce duplication |
-| `workflow-*` skills calling other skills | Documented workflows in `.claude/rules/` | More flexible, debuggable |
+Then optionally update rules in each project:
+
+```bash
+bash ~/.claude-skills/scripts/init-rules.sh /path/to/your/project
+```
+
+## Version History
+
+### v2.3.0 — Documentation overhaul
+
+No skill changes. Complete rewrite of all documentation for clarity and detail.
+
+**What's new**:
+- `docs/getting-started.md` — new quick start guide with first-use walkthrough
+- All docs rewritten with detailed examples, step-by-step instructions, and tips
+- README rewritten with skill details, collapsible sections, and workflow guides
+- Example sessions updated with realistic outputs and corrected patterns
+
+**No action needed** — just pull the latest.
+
+### v2.2.0 — Complete developer workflow
+
+Three new focused skills that complete the development lifecycle.
+
+**New skills**:
+| Skill | What it does |
+|-------|-------------|
+| `/generate-tests` | Write tests for changed/untested code |
+| `/create-pr` | Create PR with structured description and test plan |
+| `/address-feedback` | Read PR/QA feedback, categorize, fix, push |
+
+**Changed skills**:
+| Skill | What changed |
+|-------|-------------|
+| `/fix-branch` | Now accepts any fix source: review, PR feedback, QA bugs, direct description |
+| `/implement-ticket` | Added test generation (step 5) and PR creation (step 9), now 10 steps |
+
+**New rules**:
+- `single-repo-workflow.md` updated to 11 steps (added Test, PR, Feedback, QA)
+
+**Migration**: Pull and relink. New skills are available immediately.
+
+### v2.1.0 — Orchestration skills
+
+Four orchestration skills that coordinate focused skills into complete workflows.
+
+**New skills**:
+| Skill | What it does |
+|-------|-------------|
+| `/implement-ticket` | End-to-end: scan → plan → implement → test → review → fix → PR |
+| `/analyze-codebase` | Full codebase analysis with modules, entry points, complexity |
+| `/design-feature` | Feature request → system design with architecture flow and risks |
+| `/address-feedback` | Read PR/QA feedback → categorize → fix → push |
+
+**Design persistence**: `/design-feature` saves output to `.claude/designs/`. `/implement-ticket` reads it automatically in future conversations.
+
+**Migration**: Pull and relink. Orchestration skills are additive — existing skills unchanged.
+
+### v2.0.0 — Architecture refactor
+
+Complete restructure following Claude Code best practices.
+
+**What changed**:
+
+| Before (v1) | After (v2) | Reason |
+|-------------|-----------|--------|
+| Monolithic SKILL.md (100-200 lines) | Concise SKILL.md + shared rules | DRY — standards in one place |
+| `workflow-*` skills | Orchestration skills + documented workflows | More flexible, user confirmation gates |
 | `./claude-context/` file output | stdout output | Simpler, more composable |
-| `generate-config.sh` for multi-repo | `/integration-check` skill | Proper multi-repo support |
-| No agents | 5 specialized agents | Clear role separation |
-| No hooks | 4 example hooks | Automation support |
-| No output styles | 3 output styles | Consistent formatting |
-| No rules directory | 5 shared rules | DRY standards |
-| `install.sh` + `relink.sh` duplicated logic | Shared symlink logic | DRY scripts |
+| `generate-config.sh` for multi-repo | `/integration-check` skill | Proper multi-repo validation |
+| No agents, hooks, styles, rules | 5 agents, 4 hooks, 3 styles, 5 rules | Complete toolkit |
 
-### Skills changes
+**Removed**:
+| What | Replacement |
+|------|-------------|
+| `execute-prompt` skill | Standards in `.claude/rules/review.md`. Prompt execution is native to Claude Code. |
+| `workflow-prompt-craft` skill | Run `/enhance-prompt` directly |
+| `workflow-review-fix` skill | Manual workflow: `/review-branch` → `/remediation-plan` → `/fix-branch` |
+| `generate-config.sh` script | `/integration-check` skill |
+| `.claude/settings.local.json` | Removed (contained stale entries) |
 
-| Before | After | Change |
-|--------|-------|--------|
-| `enhance-prompt` | `enhance-prompt` | Slimmed down, references `rules/prompts.md` |
-| `execute-prompt` (204 lines) | Removed | Standards moved to `rules/review.md`, execution is what Claude Code does natively |
-| `review-branch` (215 lines) | `review-branch` | Slimmed to ~60 lines, references shared rules and output styles |
-| `fix-branch` (174 lines) | `fix-branch` | Slimmed to ~70 lines, accepts any fix source (review, PR, QA, direct) |
-| `create-skill` (139 lines) | `create-skill` | Slimmed, removed PR automation |
-| `workflow-prompt-craft` | Removed | Users run `/enhance-prompt` then work directly |
-| `workflow-review-fix` | Removed | Replaced by documented workflow in `rules/single-repo-workflow.md` |
-| — | `architecture-scan` | New — understand codebase before changes |
-| — | `implementation-plan` | New — concrete planning before implementation |
-| — | `remediation-plan` | New — structured fix planning from reviews |
-| — | `integration-check` | New — multi-repo consistency validation |
-| — | `generate-tests` | New — write tests for changed or untested code |
-| — | `create-pr` | New — create PR with structured description and test plan |
-| — | `analyze-codebase` | New — orchestration: full codebase analysis with entry points and complexity |
-| — | `design-feature` | New — orchestration: feature request → system design proposal |
-| — | `implement-ticket` | New — orchestration: end-to-end scan → plan → implement → test → review → fix → PR |
-| — | `address-feedback` | New — orchestration: read PR/QA feedback, categorize, fix, push |
+**Added**:
+| Category | Files |
+|----------|-------|
+| Skills | `architecture-scan`, `implementation-plan`, `remediation-plan`, `integration-check` |
+| Agents | `system-architect`, `code-reviewer`, `code-fixer`, `security-reviewer`, `prompt-engineer` |
+| Hooks | `after-review`, `after-fix`, `notify`, `protect-critical-files` (all `.example.sh`) |
+| Output styles | `review-report`, `fix-plan`, `explanatory-dev` |
+| Rules | `review`, `prompts`, `repository-structure`, `single-repo-workflow`, `multi-repo-workflow` |
+| Docs | `architecture`, `single-repo-usage`, `multi-repo-usage`, `migration-guide`, `references` |
+| Scripts | `validate.sh`, `init-rules.sh` |
 
-### Removed files
+**Migration from v1**:
 
-| File | Reason |
-|------|--------|
-| `skills/execute-prompt/SKILL.md` | Standards extracted to rules; prompt execution is native |
-| `skills/workflow-prompt-craft/SKILL.md` | Unnecessary orchestration |
-| `skills/workflow-review-fix/SKILL.md` | Replaced by documented workflow |
-| `skills/review-branch/scripts/generate-config.sh` | Replaced by `/integration-check` |
-| `.claude/settings.local.json` | Contained stale/hardcoded entries |
+1. Pull and relink:
+   ```bash
+   cd ~/.claude-skills && git pull && bash scripts/relink.sh
+   ```
 
-### New files
+2. These skills work the same (just slimmer):
+   - `/enhance-prompt` — references `rules/prompts.md` instead of embedding rules
+   - `/review-branch` — references `rules/review.md` and `output-styles/review-report.md`
+   - `/fix-branch` — references `rules/review.md`, accepts any fix source
+   - `/create-skill` — simplified, follows `rules/repository-structure.md`
 
-| File | Purpose |
-|------|---------|
-| `CLAUDE.md` | Project conventions for Claude Code |
-| `.claude/rules/*.md` | Shared standards |
-| `agents/*.md` | Subagent definitions |
-| `hooks/*.example.sh` | Automation examples |
-| `output-styles/*.md` | Output format templates |
-| `docs/*.md` | Architecture and usage docs |
-| `examples/*.md` | Example outputs |
-| `scripts/validate.sh` | Structure validation |
+3. Replace removed skills:
+   - `/workflow-review-fix <branch>` → use the manual workflow: `/review-branch` → `/remediation-plan` → `/fix-branch`
+   - `/execute-prompt` → just prompt Claude Code directly. Standards are in `.claude/rules/review.md`.
 
-## Migration steps
+4. Init rules in your projects:
+   ```bash
+   bash ~/.claude-skills/scripts/init-rules.sh /path/to/your/project
+   ```
 
-If you were using the previous version:
+5. Use new skills:
+   - `/architecture-scan` — understand codebase before changes
+   - `/implementation-plan <task>` — concrete plan before implementation
+   - `/remediation-plan from last review` — structured fix planning
+   - `/integration-check <repos>` — multi-repo contract validation
 
-1. Run `cd ~/.claude-skills && git pull` to get the new version
-2. Run `bash scripts/relink.sh` to update symlinks
-3. The following skills work the same: `/enhance-prompt`, `/review-branch`, `/fix-branch`, `/create-skill`
-4. Replace `/workflow-review-fix <branch>` with the manual workflow: `/review-branch` → `/remediation-plan` → `/fix-branch`
-5. Replace `/execute-prompt` with direct prompting (Claude Code does this natively)
-6. Use the new focused skills: `/architecture-scan`, `/implementation-plan`, `/remediation-plan`, `/integration-check`, `/generate-tests`, `/create-pr`
-7. Use the new orchestration skills for complete workflows:
-   - `/analyze-codebase` — understand a repo quickly
-   - `/design-feature <description>` — produce a system design before coding
-   - `/implement-ticket <description>` — end-to-end implementation with tests, review, fix, and PR
-   - `/address-feedback <PR number>` — read PR/QA feedback, fix, and push
+6. Use orchestration skills for complete workflows:
+   - `/implement-ticket <task>` — end-to-end implementation
+   - `/analyze-codebase` — full codebase analysis
+   - `/design-feature <description>` — system design before code
+   - `/address-feedback <PR#>` — handle reviewer/QA feedback
+
+## All Skills (Current)
+
+### Orchestration (4)
+
+| Skill | Description | Coordinates |
+|-------|-------------|------------|
+| `/implement-ticket` | End-to-end implementation | scan → plan → implement → test → review → fix → PR |
+| `/analyze-codebase` | Full codebase analysis | architecture-scan + integration-check |
+| `/design-feature` | Feature → system design | architecture-scan + integration-check |
+| `/address-feedback` | PR/QA feedback → fixes | collect → categorize → fix → push |
+
+### Focused (11)
+
+| Skill | Description |
+|-------|-------------|
+| `/architecture-scan` | Map codebase structure, modules, dependencies |
+| `/implementation-plan` | Concrete plan with files, order, risks |
+| `/review-branch` | Severity-ranked code review |
+| `/remediation-plan` | Review findings → prioritized fix plan |
+| `/fix-branch` | Apply targeted fixes from any source |
+| `/fix-ci` | Diagnose + fix failing CI checks |
+| `/generate-tests` | Write tests for changed code |
+| `/create-pr` | Create PR with structured description |
+| `/integration-check` | Cross-repo contract validation |
+| `/enhance-prompt` | Transform rough prompt → structured English |
+| `/create-skill` | Scaffold new skill following conventions |

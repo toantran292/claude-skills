@@ -1,5 +1,26 @@
 # Changelog
 
+## v2.3.0 — 2026-03-11
+
+Complete documentation overhaul — detailed guides, examples, and getting-started walkthrough.
+
+### Added
+- `docs/getting-started.md` — new quick start guide with first-use walkthrough and troubleshooting
+- Collapsible skill details in README with step-by-step explanations
+- Detailed example outputs in all workflow guides
+- ASCII component relationship diagram in architecture docs
+- Tips and "when to skip" guidance in single-repo and multi-repo guides
+- Complete skill reference table in migration guide
+
+### Changed
+- README rewritten with Quick Start, How It Works, detailed skill tables, workflow examples
+- `docs/architecture.md` rewritten with component diagram, annotated directory layout, design decisions
+- `docs/single-repo-usage.md` rewritten with example outputs for every step, skip guidance, tips
+- `docs/multi-repo-usage.md` rewritten with clear per-repo session pattern, example outputs
+- `docs/migration-guide.md` rewritten with version history format, clear upgrade instructions
+- `examples/single-repo-session.md` updated with realistic outputs, CI fix step, more detail
+- `examples/multi-repo-session.md` fixed to use per-repo sessions instead of `cd &&` pattern
+
 ## v2.2.0 — 2026-03-11
 
 Complete developer workflow coverage — from ticket to QA acceptance.

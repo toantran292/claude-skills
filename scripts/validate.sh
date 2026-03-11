@@ -63,7 +63,7 @@ done
 
 # Required docs
 echo "--- Documentation ---"
-for d in architecture.md migration-guide.md single-repo-usage.md multi-repo-usage.md references.md; do
+for d in getting-started.md architecture.md migration-guide.md single-repo-usage.md multi-repo-usage.md references.md; do
   check "docs/$d"
 done
 

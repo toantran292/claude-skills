@@ -31,23 +31,30 @@ If no PR is found, ask the user for a PR number.
 ### Step 2: Get failing checks
 
 ```bash
-gh pr checks <number> --json name,state,detailsUrl
+gh pr checks <number> --json name,state,link,workflow,bucket,event
 ```
 
-List all checks and their status. Focus on **failing** checks only.
+Available fields: `bucket`, `completedAt`, `description`, `event`, `link`, `name`, `startedAt`, `state`, `workflow`.
+
+List all checks and their status. Focus on checks where `state` is `FAILURE`.
+
+The `link` field contains the URL to the check run (e.g. `https://github.com/org/repo/actions/runs/12345/job/67890`). Extract the **run ID** from the URL path: it's the number after `/runs/`.
 
 ### Step 3: Read CI logs
 
-For each failing check, get the logs:
+For each failing check, extract the run ID from the `link` URL and get the logs:
 
 ```bash
-# Get the run ID from the check
+# Extract run ID from link URL (the number after /runs/)
+# e.g. https://github.com/org/repo/actions/runs/22949152885/job/66609108920
+# → run ID is 22949152885
+
 gh run view <run-id> --log-failed
 ```
 
-If `--log-failed` output is too large, use:
+If `--log-failed` output is too large or empty, use:
 ```bash
-gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion == "failure") | .name'
+gh run view <run-id> --json jobs --jq '.jobs[] | select(.conclusion == "failure") | {name, id: .databaseId}'
 gh run view <run-id> --log --job-id <job-id> | tail -100
 ```
 
