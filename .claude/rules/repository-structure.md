@@ -26,7 +26,7 @@ Followed by markdown with: Input, Process (numbered steps), Output.
 ## Composition
 
 - Skills reference rules via: "Apply standards from `.claude/rules/review.md`"
-- Skills reference output styles via: "Use the format from `output-styles/review-report.md`"
+- Skills reference output styles via: "Use the format from `.claude/output-styles/review-report.md`"
 - Skills do NOT embed large instruction blocks — they reference shared files
 - Agents define role boundaries and tool preferences
 

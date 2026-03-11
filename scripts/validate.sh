@@ -26,7 +26,7 @@ done
 
 # Required directories
 echo "--- Directories ---"
-for d in skills agents hooks output-styles .claude/rules docs examples scripts; do
+for d in skills agents hooks .claude/output-styles .claude/rules docs examples scripts; do
   check "$d"
 done
 
@@ -52,7 +52,7 @@ done
 # Required output styles
 echo "--- Output styles ---"
 for o in review-report.md fix-plan.md explanatory-dev.md; do
-  check "output-styles/$o"
+  check ".claude/output-styles/$o"
 done
 
 # Required rules

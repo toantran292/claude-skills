@@ -51,7 +51,7 @@ Review every changed file across these categories:
 
 ### Step 3: Output
 
-Use the format from `output-styles/review-report.md`.
+Use the format from `.claude/output-styles/review-report.md`.
 
 Write the report to stdout. Include:
 - Severity-ranked issues (Critical, Major, Minor, Suggestions)

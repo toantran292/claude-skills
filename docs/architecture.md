@@ -92,7 +92,7 @@ claude-skills/
 │   ├── notify.example.sh          Send notifications
 │   └── protect-critical-files.example.sh  Block protected file edits
 │
-├── output-styles/                 3 standardized output formats
+├── .claude/output-styles/                 3 standardized output formats
 │   ├── review-report.md           Severity buckets + score + verdict
 │   ├── fix-plan.md                Priority groups + validation
 │   └── explanatory-dev.md         Lead-with-answer format
@@ -251,7 +251,7 @@ Focused Layer (standalone, no dependencies)
 
 ### 6. Init-rules for portability
 
-**Problem**: Skills reference `.claude/rules/*.md` and `output-styles/*.md`, but these don't exist in user projects.
+**Problem**: Skills reference `.claude/rules/*.md` and `.claude/output-styles/*.md`, but these don't exist in user projects.
 
 **Solution**: `scripts/init-rules.sh` copies rules, output styles, and CLAUDE.md conventions to any target project.
 
@@ -271,7 +271,7 @@ Rules in `.claude/rules/` define standards that multiple skills reference:
 
 ## Output Styles
 
-Output styles in `output-styles/` define reusable formats:
+Output styles in `.claude/output-styles/` define reusable formats:
 
 | Style | Structure | Referenced by |
 |-------|-----------|---------------|
@@ -313,7 +313,7 @@ Create `hooks/<event>.example.sh` as a template. Users copy it to their project'
 
 ### Adding a new output style
 
-Create `output-styles/<artifact>.md` defining the format structure. Skills reference it with: "Use the format from `output-styles/<artifact>.md`".
+Create `.claude/output-styles/<artifact>.md` defining the format structure. Skills reference it with: "Use the format from `.claude/output-styles/<artifact>.md`".
 
 ### Adding a new rule
 

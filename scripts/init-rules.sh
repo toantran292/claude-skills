@@ -29,14 +29,14 @@ for rule in "$SOURCE_DIR"/.claude/rules/*.md; do
 done
 
 # Copy output styles
-mkdir -p "$TARGET/output-styles"
-for style in "$SOURCE_DIR"/output-styles/*.md; do
+mkdir -p "$TARGET/.claude/output-styles"
+for style in "$SOURCE_DIR"/.claude/output-styles/*.md; do
   name=$(basename "$style")
-  if [ -f "$TARGET/output-styles/$name" ]; then
-    echo "  SKIP output-styles/$name (already exists)"
+  if [ -f "$TARGET/.claude/output-styles/$name" ]; then
+    echo "  SKIP .claude/output-styles/$name (already exists)"
   else
-    cp "$style" "$TARGET/output-styles/$name"
-    echo "  OK output-styles/$name"
+    cp "$style" "$TARGET/.claude/output-styles/$name"
+    echo "  OK .claude/output-styles/$name"
   fi
 done
 

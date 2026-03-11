@@ -22,7 +22,7 @@ Explains hook lifecycle, configuration, and use cases. Shaped our `hooks/` direc
 
 ### [Output styles](https://code.claude.com/docs/en/output-styles)
 
-Describes how to standardize Claude Code output formats. Shaped our `output-styles/` directory.
+Describes how to standardize Claude Code output formats. Shaped our `.claude/output-styles/` directory.
 
 ### [Best practices](https://code.claude.com/docs/en/best-practices)
 

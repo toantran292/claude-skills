@@ -8,8 +8,8 @@ Engineering toolkit for Claude Code — skills, agents, hooks, output styles, an
 skills/          Focused, single-responsibility skills (SKILL.md per skill)
 agents/          Specialized subagent definitions
 hooks/           Example hook scripts for automation
-output-styles/   Standardized output formats
 .claude/rules/   Reusable rules referenced by skills and agents
+.claude/output-styles/  Standardized output formats
 docs/            Architecture and usage documentation
 examples/        Example outputs and session transcripts
 scripts/         Install, relink, and validation scripts
@@ -24,7 +24,7 @@ scripts/         Install, relink, and validation scripts
 - `$ARGUMENTS` is the user input variable in skills
 - `disable-model-invocation: true` only on skills that orchestrate other skills
 - Agents are markdown files in `agents/` defining role, responsibilities, and boundaries
-- Output styles in `output-styles/` define reusable formats for artifacts
+- Output styles in `.claude/output-styles/` define reusable formats for artifacts
 - Hook examples in `hooks/` are `.example.sh` files — not active by default
 
 ## Commit conventions

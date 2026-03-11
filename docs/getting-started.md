@@ -35,9 +35,9 @@ What this copies:
 - `.claude/rules/repository-structure.md` — naming and composition conventions
 - `.claude/rules/single-repo-workflow.md` — 11-step single-repo workflow
 - `.claude/rules/multi-repo-workflow.md` — 10-step multi-repo workflow
-- `output-styles/review-report.md` — review output format
-- `output-styles/fix-plan.md` — fix plan output format
-- `output-styles/explanatory-dev.md` — explanation output format
+- `.claude/output-styles/review-report.md` — review output format
+- `.claude/output-styles/fix-plan.md` — fix plan output format
+- `.claude/output-styles/explanatory-dev.md` — explanation output format
 - `CLAUDE.md` — commit conventions (Conventional Commits, no Co-Authored-By)
 
 This is idempotent — running it again skips files that already exist.

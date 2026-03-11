@@ -195,7 +195,7 @@ All tests passing: ✓
 /review-branch
 ```
 
-**What it produces**: Severity-ranked review following `output-styles/review-report.md` format.
+**What it produces**: Severity-ranked review following `.claude/output-styles/review-report.md` format.
 
 **Severity levels**:
 - **Critical** — must fix before production (security holes, data loss, crashes)

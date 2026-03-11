@@ -34,7 +34,7 @@ Group issues by priority considering:
 
 ### Step 3: Produce the plan
 
-Use the format from `output-styles/fix-plan.md`:
+Use the format from `.claude/output-styles/fix-plan.md`:
 
 ```
 ## Remediation Plan

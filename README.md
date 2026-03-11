@@ -20,7 +20,7 @@ This clones the toolkit to `~/.claude-skills` and symlinks all skills to `~/.cla
 bash ~/.claude-skills/scripts/init-rules.sh /path/to/your/project
 ```
 
-This copies shared rules (`.claude/rules/`), output styles (`output-styles/`), and commit conventions (`CLAUDE.md`) into your project — so skills have full context when working in that project.
+This copies shared rules (`.claude/rules/`), output styles (`.claude/output-styles/`), and commit conventions (`CLAUDE.md`) into your project — so skills have full context when working in that project.
 
 ### 3. Start using
 
@@ -39,7 +39,7 @@ Claude Code loads the skill's SKILL.md
     ↓
 Skill references shared rules (.claude/rules/review.md)
     ↓
-Skill references output styles (output-styles/review-report.md)
+Skill references output styles (.claude/output-styles/review-report.md)
     ↓
 Skill may delegate to agents (agents/code-reviewer.md)
     ↓
@@ -59,7 +59,7 @@ claude-skills/
 │   └── <role>.md
 ├── hooks/               4 example automation scripts
 │   └── <event>.example.sh
-├── output-styles/       3 standardized output format templates
+├── .claude/output-styles/       3 standardized output format templates
 │   └── <artifact>.md
 ├── .claude/rules/       5 shared standards referenced by skills
 │   └── <topic>.md
@@ -149,7 +149,7 @@ The design is saved to `.claude/designs/<feature-slug>.md`. Multiple designs can
 Reviews code changes with the rigor of a Staff/Principal Engineer:
 
 - Applies standards from `.claude/rules/review.md` (SOLID, Clean Code, Security, Performance, ACID)
-- Outputs using `output-styles/review-report.md` format
+- Outputs using `.claude/output-styles/review-report.md` format
 - Produces severity-ranked issues: Critical, Major, Minor, Suggestions
 - Includes production readiness score (1-10) and approval recommendation
 
@@ -307,7 +307,7 @@ bash ~/.claude-skills/scripts/init-rules.sh /path/to/your/project
 
 This copies:
 - `.claude/rules/*.md` — code review standards, prompt rules, workflows
-- `output-styles/*.md` — review report, fix plan, explanatory formats
+- `.claude/output-styles/*.md` — review report, fix plan, explanatory formats
 - `CLAUDE.md` — commit conventions (Conventional Commits, no Co-Authored-By)
 
 Idempotent — safe to run multiple times. Skips files that already exist.
@@ -341,7 +341,7 @@ Or manually: create `skills/<verb>-<noun>/SKILL.md` following [.claude/rules/rep
 - **Naming**: kebab-case `<verb>-<noun>` (e.g. `review-branch`, `fix-ci`)
 - **Input**: `$ARGUMENTS` for user input in SKILL.md
 - **Rules**: reference `.claude/rules/` — never duplicate standards
-- **Output**: reference `output-styles/` for consistent formatting
+- **Output**: reference `.claude/output-styles/` for consistent formatting
 - **Size**: keep SKILL.md concise (< 80 lines)
 - **Commits**: [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) — never include Co-Authored-By
 

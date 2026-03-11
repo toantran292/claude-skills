@@ -109,7 +109,7 @@ Complete restructure following Claude Code best practices.
 
 2. These skills work the same (just slimmer):
    - `/enhance-prompt` — references `rules/prompts.md` instead of embedding rules
-   - `/review-branch` — references `rules/review.md` and `output-styles/review-report.md`
+   - `/review-branch` — references `rules/review.md` and `.claude/output-styles/review-report.md`
    - `/fix-branch` — references `rules/review.md`, accepts any fix source
    - `/create-skill` — simplified, follows `rules/repository-structure.md`
 
